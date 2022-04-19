@@ -1,3 +1,20 @@
 lab start secure-oauth
 3scale application list 3scale-tenant --service=secure_oauth
-
+3scale application show 3scale-tenant 7 -o json | jq -r '.user_key'
+curl "https://secure-oauth-3scale-apicast-staging.apps.ocp4.example.com/books?user_key=acaa2950a6124cd27a45194c023d2a3d" | jq
+sh /home/student/DO240/labs/secure-oauth/inject_rhsso_ca.sh
+oc -n 3scale get pods -l threescale_component_element=zync-que
+oc -n rhsso get secret credential-keycloak --template={{.data.ADMIN_PASSWORD}} | base64 -d ; echo
+  # retorna credencial keycloak
+https://keycloak-rhsso.apps.ocp4.example.com/auth/admin/master/console/#/realms/do240
+  Log in as admin with the keycloak-password from the previous step
+keycloak >> Clients >> Create  
+  /home/student/DO240/labs/secure-oauth/zync-client.json
+keycloak >> Service Account Roles >> Realm Management >> Mnage Clients >> Add Selected
+keycloak >> Credentials >> Secret 
+  manter tab aberta
+3scale >> Login >> Admin
+  oc get secret system-seed -n 3scale -o json | jq -r .data.ADMIN_PASSWORD | base64 -d; echo
+3scale >> Products >> Integration >> Settings
+  Authentication >> OpenID Connect for any OAuth 2.0 Flow
+  
