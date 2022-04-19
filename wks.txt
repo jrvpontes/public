@@ -1,0 +1,30 @@
+lab start install-principles
+chmod +x DO240-apps/scripts/*
+lab finish install-principles
+
+oc create secret docker-registry threescale-registry-auth --docker-server=registry.redhat.io --docker-username=jpontes@redhat.com --docker-password=1q2w3e4r
+
+
+oc secrets link default threescale-registry-auth --for=pull
+
+
+----------------------------------
+
+podman login registry.redhat.io
+podman pull registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11
+
+podman run registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale help
+alias 3scale="podman run registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale"
+-----------------------------------
+
+lab start install-setup
+https://api.ocp4.example.com:6443
+https://console-openshift-console.apps.ocp4.example.com
+
+
+
+oc get secret system-seed -n 3scale --template={{.data.ADMIN_PASSWORD}} | base64 -d; echo
+PrxwAESZ
+61b31f357fa8bbaef4daafe495c5ba15e602045b6adea5bf76cd897454cf32b4
+
+podman run --name=toolbox-original registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale remote add 3scale-tenant -k https://61b31f357fa8bbaef4daafe495c5ba15e602045b6adea5bf76cd897454cf32b4@3scale-admin.apps.ocp4.example.com

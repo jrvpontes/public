@@ -1,0 +1,10 @@
+3scale service create 3scale-tenant library_product
+
+3scale application-plan create 3scale-tenant library_product east-branch-plan
+
+3scale account find 3scale-tenant john
+
+
+3scale application create 3scale-tenant 3 library_product east_branch_plan east-branch-app
+
+Red Hat Single Sign-On Operator
