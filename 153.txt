@@ -1,0 +1,3 @@
+lab start secure-oauth
+3scale application list 3scale-tenant --service=secure_oauth
+
