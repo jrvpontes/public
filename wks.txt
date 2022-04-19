@@ -37,9 +37,11 @@ Installed Operators >> 3scale >> API Manager
     wildcardDomain: apps.ocp4.example.com
     resourceRequirementsEnabled: false
 #toolbox   
-   https://access.redhat.com/terms-basedregistry/
+   https://access.redhat.com/terms-based-registry/    
      Service Account >> jp_do240
-podman login registry.redhat.io -user:jp_do240 - pwd:jp_do240_token
+     
+podman login registry.redhat.io --username '11009103|jp-240'  --password eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJhNmZmNzZjYzRmNmQ0MGZiOWJiMmQ0ZDdhZGU5NzI4YyJ9.jfenVcxNfP7jHQhbwzNlCLWfVRzp9mFEli4Jvp2P5Ck2MULFtJzUo9ZvEM5uaKxNQ3YV0SzpK09hKu5Zzoo_Ol48e_bbrWhto6o3RuZ-PDAWCb7BE7uKOJburjNn7kG-3eEwZ9E7mqnYN1ZUKcDOx1NX1y6zbL7FRF5i7UC9IZ6WJxKdNYnJi0ot1-fuVKCK01700m46fU5F7kVOY3zkHAYIk1ix4rKecJU2haL_2dtdUJ-UPOgTgFOg7BFUBvVOZlmUbthb7ag23O389jJz6CkMBsMmPuHSGZ2rrDBjPBvWkN_AQCuldaeDERap9gSci0MB9VjrPM_BDLqiUI-rU-QaqydSa9H8E86Jp6JZsMEGaI9VZzkcoM1dE8qJl5EEWB2V-C9VswECHKp07faoH8gpBmKtERAeZ6oyh1IdLAGUz2lKHQGGT32ZBA6RwCGFECX5ZdFlmaFl2dTOT5fUHaaUl3k3zetWiJTqtaKy4FwAL2iWidErV7apII3vPAv_EctxurIM1f8YvO75Vr5iwJR1gSznUF7sMtbipVm7EB8jAzTVaBRiFFWZkFhtL0b516sJ2j1-6pAbDuIhrZB0tsTX2B_uzoZH1DWldKzEuONLe5BA4hNzus0h8q6Ma2UM9ExlVrBiWwI00j-nIw-cLQsc5rxMEdBGYrBlSKaKUiU
+
 podman pull registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11
 podman run registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale help
 alias 3scale="podman run registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale"
