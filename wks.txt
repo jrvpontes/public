@@ -1,30 +1,65 @@
+------------------------------------------------------
 lab start install-principles
+oc login -u admin -p redhat api.ocp4.example.com:6443
+git clone https://github.com/RedHatTraining/DO240-apps.git
 chmod +x DO240-apps/scripts/*
 lab finish install-principles
-
+------------------------------------------------------------------------------------------------------------
+############################################################################################################
+------------------------------------------------------------------------------------------------------------
 oc create secret docker-registry threescale-registry-auth --docker-server=registry.redhat.io --docker-username=jpontes@redhat.com --docker-password=1q2w3e4r
 
-
 oc secrets link default threescale-registry-auth --for=pull
-
-
-----------------------------------
-
+oc secrets link builder threescale-registry-auth
 podman login registry.redhat.io
 podman pull registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11
-
 podman run registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale help
 alias 3scale="podman run registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale"
------------------------------------
-
+3scale remote add 3scale-tenant -k https://ACCESS_TOKEN@TENANT_ADMIN_PORTAL_URL
+podman run --name=toolbox-original \
+registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale remote \
+add 3scale-tenant -k https://ACCESS_TOKEN@TENANT_ADMIN_PORTAL_URL
+$ podman run --name=toolbox-original registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale remote add 3scale-tenant -k https://ACCESS_TOKEN@TENANT_ADMIN_PORTAL_URL
+podman commit toolbox-original toolbox
+alias 3scale="podman run toolbox 3scale -k"
+------------------------------------------------------------------------------------------------------------
+############################################################################################################
+------------------------------------------------------------------------------------------------------------
 lab start install-setup
 https://api.ocp4.example.com:6443
 https://console-openshift-console.apps.ocp4.example.com
-
-
-
+  • Username: admin
+  • Password: redhat  
+oc new-project 3scale
+Operators Hub >> 3scale >> 3scale
+Installed Operators >> 3scale >> API Manager
+  spec:
+    wildcardDomain: apps.ocp4.example.com
+    resourceRequirementsEnabled: false
+#toolbox   
+   https://access.redhat.com/terms-basedregistry/
+     Service Account >> jp_do240
+podman login registry.redhat.io -user:jp_do240 - pwd:jp_do240_token
+podman pull registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11
+podman run registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale help
+alias 3scale="podman run registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale"
+oc login -u admin -p redhat api.ocp4.example.com:6443
 oc get secret system-seed -n 3scale --template={{.data.ADMIN_PASSWORD}} | base64 -d; echo
-PrxwAESZ
-61b31f357fa8bbaef4daafe495c5ba15e602045b6adea5bf76cd897454cf32b4
+  #resultado: system-seed secret
+https://3scale-admin.apps.ocp4.example.com
+  • Username: admin
+  • Password: system-seed secret
 
-podman run --name=toolbox-original registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale remote add 3scale-tenant -k https://61b31f357fa8bbaef4daafe495c5ba15e602045b6adea5bf76cd897454cf32b4@3scale-admin.apps.ocp4.example.com
+3scalle >> Dashboard >>  Account Settings
+Personal >> Tokens >> Add Access Token
+  • Name: toolbox
+  • Scope: all
+  • Permissions: Read & Write
+  Create Access token : ACCESS_TOKEN
+podman run --name=toolbox-original registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale remote add 3scale-tenant -k https://ACCESS_TOKEN@3scale-admin.apps.ocp4.example.com
+podman commit toolbox-original toolbox
+alias 3scale="podman run toolbox 3scale -k"
+3scale remote list  
+lab finish install-setup
+
+
