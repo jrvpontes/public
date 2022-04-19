@@ -1,0 +1,38 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"keycloak.org/v1alpha1","kind":"KeycloakUser","metadata":{"labels":{"app":"sso"},"name":"student-user","namespace":"rhsso"},"spec":{"realmSelector":{"matchLabels":{"realm":"do240"}},"user":{"credentials":[{"type":"password","value":"redhat"}],"email":"student@example.com","emailVerified":true,"enabled":true,"firstName":"gls","lastName":"student","realmRoles":["offline_access","uma_authorization","default-roles-do240"],"username":"student"}}}'
+  creationTimestamp: "2022-04-19T02:32:55Z"
+  finalizers:
+  - user.cleanup
+  generation: 2
+  labels:
+    app: sso
+  name: student-user
+  namespace: rhsso
+  resourceVersion: "281585"
+  uid: 071e3d78-4e85-4090-8037-75ac9af927be
+spec:
+  realmSelector:
+    matchLabels:
+      realm: do240
+  user:
+    credentials:
+    - type: password
+      value: redhat
+    email: student@example.com
+    emailVerified: true
+    enabled: true
+    firstName: gls
+    id: 4f71edfe-7263-4d33-8973-e074501f1d37
+    lastName: student
+    realmRoles:
+    - offline_access
+    - uma_authorization
+    - default-roles-do240
+    username: student
+status:
+  message: neither internal nor external url is a valid keycloak url (is keycloak
+    instance running?)
+  phase: reconciled

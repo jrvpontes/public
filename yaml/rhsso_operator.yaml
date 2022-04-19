@@ -1,0 +1,62 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"operators.coreos.com/v1alpha1","kind":"Subscription","metadata":{"name":"rhsso-operator","namespace":"rhsso"},"spec":{"channel":"stable","installPlanApproval":"Automatic","name":"rhsso-operator","source":"redhat-operators-3scale","sourceNamespace":"openshift-marketplace"}}'
+  creationTimestamp: "2022-04-19T02:31:28Z"
+  generation: 1
+  labels:
+    operators.coreos.com/rhsso-operator.rhsso: ""
+  name: rhsso-operator
+  namespace: rhsso
+  resourceVersion: "282157"
+  uid: 1e30ff87-ca59-4786-9faf-c116bf15b8d4
+spec:
+  channel: stable
+  installPlanApproval: Automatic
+  name: rhsso-operator
+  source: redhat-operators-3scale
+  sourceNamespace: openshift-marketplace
+status:
+  catalogHealth:
+  - catalogSourceRef:
+      apiVersion: operators.coreos.com/v1alpha1
+      kind: CatalogSource
+      name: redhat-operators-3scale
+      namespace: openshift-marketplace
+      resourceVersion: "160838"
+      uid: 9155c95f-4c39-44e9-b85f-85986b337189
+    healthy: true
+    lastUpdated: "2022-04-19T02:31:34Z"
+  - catalogSourceRef:
+      apiVersion: operators.coreos.com/v1alpha1
+      kind: CatalogSource
+      name: redhat-operators-3scale-community
+      namespace: openshift-marketplace
+      resourceVersion: "160815"
+      uid: 1d2dafff-581d-4010-8b0e-0e88606a2d81
+    healthy: true
+    lastUpdated: "2022-04-19T02:31:34Z"
+  conditions:
+  - lastTransitionTime: "2022-04-19T02:31:34Z"
+    message: all available catalogsources are healthy
+    reason: AllCatalogSourcesHealthy
+    status: "False"
+    type: CatalogSourcesUnhealthy
+  currentCSV: rhsso-operator.7.5.1-opr-007
+  installPlanGeneration: 2
+  installPlanRef:
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: InstallPlan
+    name: install-pcrcn
+    namespace: rhsso
+    resourceVersion: "175530"
+    uid: 2681ed8f-0c8b-477b-8e72-d0c22aec2487
+  installedCSV: rhsso-operator.7.5.1-opr-007
+  installplan:
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: InstallPlan
+    name: install-pcrcn
+    uuid: 2681ed8f-0c8b-477b-8e72-d0c22aec2487
+  lastUpdated: "2022-04-19T10:45:11Z"
+  state: AtLatestKnown

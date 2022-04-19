@@ -1,0 +1,73 @@
+apiVersion: v1
+items:
+- apiVersion: apps.3scale.net/v1alpha1
+  kind: APIManager
+  metadata:
+    annotations:
+      apps.3scale.net/apimanager-threescale-version: "2.11"
+      apps.3scale.net/threescale-operator-version: 0.8.1
+    creationTimestamp: "2022-04-19T01:50:29Z"
+    generation: 2
+    name: apimanager-sample
+    namespace: 3scale
+    resourceVersion: "282668"
+    uid: 75363b2e-08a3-40a4-b603-82c147ce66af
+  spec:
+    apicast:
+      managementAPI: status
+      openSSLVerify: false
+      productionSpec:
+        replicas: 1
+      registryURL: http://apicast-staging:8090/policies
+      responseCodes: true
+      stagingSpec:
+        replicas: 1
+    appLabel: 3scale-api-management
+    backend:
+      cronSpec:
+        replicas: 1
+      listenerSpec:
+        replicas: 1
+      workerSpec:
+        replicas: 1
+    imageStreamTagImportInsecure: false
+    resourceRequirementsEnabled: false
+    system:
+      appSpec:
+        replicas: 1
+      sidekiqSpec:
+        replicas: 1
+      sphinxSpec: {}
+    tenantName: 3scale
+    wildcardDomain: apps.ocp4.example.com
+    zync:
+      appSpec:
+        replicas: 1
+      queSpec:
+        replicas: 1
+  status:
+    conditions:
+    - lastTransitionTime: "2022-04-19T10:46:49Z"
+      status: "True"
+      type: Available
+    deployments:
+      ready:
+      - apicast-production
+      - apicast-staging
+      - backend-cron
+      - backend-listener
+      - backend-redis
+      - backend-worker
+      - system-app
+      - system-memcache
+      - system-mysql
+      - system-redis
+      - system-sidekiq
+      - system-sphinx
+      - zync
+      - zync-database
+      - zync-que
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

@@ -1,0 +1,61 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  creationTimestamp: "2022-04-19T01:19:59Z"
+  generation: 1
+  labels:
+    operators.coreos.com/3scale-operator.3scale: ""
+  name: 3scale-operator
+  namespace: 3scale
+  resourceVersion: "282151"
+  uid: ad9f9107-8a2b-44fa-bc15-a09607cd02c3
+spec:
+  channel: threescale-2.11
+  installPlanApproval: Automatic
+  name: 3scale-operator
+  source: redhat-operators-3scale
+  sourceNamespace: openshift-marketplace
+  startingCSV: 3scale-operator.v0.8.2
+status:
+  catalogHealth:
+  - catalogSourceRef:
+      apiVersion: operators.coreos.com/v1alpha1
+      kind: CatalogSource
+      name: redhat-operators-3scale
+      namespace: openshift-marketplace
+      resourceVersion: "141815"
+      uid: 9155c95f-4c39-44e9-b85f-85986b337189
+    healthy: true
+    lastUpdated: "2022-04-19T01:20:00Z"
+  - catalogSourceRef:
+      apiVersion: operators.coreos.com/v1alpha1
+      kind: CatalogSource
+      name: redhat-operators-3scale-community
+      namespace: openshift-marketplace
+      resourceVersion: "141814"
+      uid: 1d2dafff-581d-4010-8b0e-0e88606a2d81
+    healthy: true
+    lastUpdated: "2022-04-19T01:20:00Z"
+  conditions:
+  - lastTransitionTime: "2022-04-19T01:20:00Z"
+    message: all available catalogsources are healthy
+    reason: AllCatalogSourcesHealthy
+    status: "False"
+    type: CatalogSourcesUnhealthy
+  currentCSV: 3scale-operator.v0.8.2
+  installPlanGeneration: 1
+  installPlanRef:
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: InstallPlan
+    name: install-r5lvz
+    namespace: 3scale
+    resourceVersion: "149872"
+    uid: 2e199ca6-cb53-4cce-ad83-7fdb93a4e68b
+  installedCSV: 3scale-operator.v0.8.2
+  installplan:
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: InstallPlan
+    name: install-r5lvz
+    uuid: 2e199ca6-cb53-4cce-ad83-7fdb93a4e68b
+  lastUpdated: "2022-04-19T10:45:11Z"
+  state: AtLatestKnown

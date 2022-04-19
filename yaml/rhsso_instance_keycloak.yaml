@@ -1,0 +1,49 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"keycloak.org/v1alpha1","kind":"Keycloak","metadata":{"labels":{"app":"sso"},"name":"keycloak","namespace":"rhsso"},"spec":{"externalAccess":{"enabled":true},"instances":1}}'
+  creationTimestamp: "2022-04-19T02:32:55Z"
+  generation: 1
+  labels:
+    app: sso
+  name: keycloak
+  namespace: rhsso
+  resourceVersion: "282160"
+  uid: 8107c513-8674-437b-aa02-9763b3cf0a58
+spec:
+  externalAccess:
+    enabled: true
+  instances: 1
+status:
+  credentialSecret: credential-keycloak
+  externalURL: https://keycloak-rhsso.apps.ocp4.example.com
+  internalURL: https://keycloak.rhsso.svc:8443
+  message: ""
+  phase: reconciling
+  ready: true
+  secondaryResources:
+    ConfigMap:
+    - keycloak-probes
+    Deployment:
+    - keycloak-postgresql
+    PersistentVolumeClaim:
+    - keycloak-postgresql-claim
+    PrometheusRule:
+    - keycloak
+    Route:
+    - keycloak
+    - keycloak-metrics-rewrite
+    Secret:
+    - credential-keycloak
+    - keycloak-db-secret
+    Service:
+    - keycloak-postgresql
+    - keycloak
+    - keycloak-discovery
+    - keycloak-monitoring
+    ServiceMonitor:
+    - keycloak-service-monitor
+    StatefulSet:
+    - keycloak
+  version: main
