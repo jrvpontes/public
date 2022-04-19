@@ -1,0 +1,29 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"keycloak.org/v1alpha1","kind":"KeycloakUser","metadata":{"labels":{"app":"sso"},"name":"student-user","namespace":"rhsso"},"spec":{"realmSelector":{"matchLabels":{"realm":"do240"}},"user":{"credentials":[{"type":"password","value":"redhat"}],"email":"student@example.com","emailVerified":true,"enabled":true,"firstName":"gls","lastName":"student","realmRoles":["offline_access","uma_authorization","default-roles-do240"],"username":"student"}}}'
+  finalizers:
+  - user.cleanup
+  labels:
+    app: sso
+  name: student-user
+  namespace: rhsso
+spec:
+  realmSelector:
+    matchLabels:
+      realm: do240
+  user:
+    credentials:
+    - type: password
+      value: redhat
+    email: student@example.com
+    emailVerified: true
+    enabled: true
+    firstName: gls
+    lastName: student
+    realmRoles:
+    - offline_access
+    - uma_authorization
+    - default-roles-do240
+    username: student

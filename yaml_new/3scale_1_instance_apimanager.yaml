@@ -1,0 +1,21 @@
+apiVersion: v1
+items:
+- apiVersion: apps.3scale.net/v1alpha1
+  kind: APIManager
+  metadata:
+    annotations:
+      apps.3scale.net/apimanager-threescale-version: "2.11"
+      apps.3scale.net/threescale-operator-version: 0.8.1
+    name: apimanager-sample
+    namespace: 3scale
+  spec:
+    apicast:
+      managementAPI: status
+      openSSLVerify: false
+      registryURL: http://apicast-staging:8090/policies
+      responseCodes: true
+    appLabel: 3scale-api-management
+    imageStreamTagImportInsecure: false
+    resourceRequirementsEnabled: false
+    tenantName: 3scale
+    wildcardDomain: apps.ocp4.example.com
