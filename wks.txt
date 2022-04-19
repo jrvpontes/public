@@ -58,7 +58,9 @@ Personal >> Tokens >> Add Access Token
   • Scope: all
   • Permissions: Read & Write
   Create Access token : ACCESS_TOKEN
-podman run --name=toolbox-original registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale remote add 3scale-tenant -k https://ACCESS_TOKEN@3scale-admin.apps.ocp4.example.com
+ACCESS_TOKEN=c107327b2b87eecf6c072637f7bb0cc100b4d0976ec9b9fd4aecae6665c5b40e
+
+podman run --name=toolbox-original registry.redhat.io/3scale-amp2/toolbox-rhel8:3scale2.11 3scale remote add 3scale-tenant -k https://$ACCESS_TOKEN@3scale-admin.apps.ocp4.example.com
 podman commit toolbox-original toolbox
 alias 3scale="podman run toolbox 3scale -k"
 3scale remote list  
