@@ -1,20 +1,20 @@
-<mxfile host="app.diagrams.net" modified="2023-01-19T17:23:23.990Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 OPR/94.0.0.0" etag="uXwQoFU5HAOHYL-QM2Ik" version="20.8.7" type="github">
+<mxfile host="app.diagrams.net" modified="2023-01-19T18:01:26.792Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 OPR/94.0.0.0" etag="trhNDGJhwtmwnSZzxXvs" version="20.8.7" type="github">
   <diagram name="Page-1" id="2c0d36ab-eaac-3732-788b-9136903baeff">
     <mxGraphModel dx="2074" dy="806" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="0re8-O0s-dHvsTImXKTh-137" value="" style="fillColor=#6d8764;strokeColor=#3A5431;opacity=30;fontColor=#ffffff;" parent="1" vertex="1">
-          <mxGeometry x="780" y="310" width="230" height="440" as="geometry" />
+          <mxGeometry x="780" y="310" width="230" height="420" as="geometry" />
         </mxCell>
         <mxCell id="123" value="" style="fillColor=#AE4132;strokeColor=none;opacity=30;" parent="1" vertex="1">
           <mxGeometry x="747" y="175.5" width="283" height="100" as="geometry" />
         </mxCell>
         <mxCell id="122" value="" style="fillColor=#10739E;strokeColor=none;opacity=30;" parent="1" vertex="1">
-          <mxGeometry x="1020" y="310" width="440" height="440" as="geometry" />
+          <mxGeometry x="1020" y="310" width="440" height="420" as="geometry" />
         </mxCell>
         <mxCell id="117" value="" style="fillColor=#F2931E;strokeColor=none;opacity=30;" parent="1" vertex="1">
-          <mxGeometry x="507" y="310" width="250" height="650" as="geometry" />
+          <mxGeometry x="507" y="310" width="250" height="630" as="geometry" />
         </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-138" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=24;" parent="1" source="2" target="4" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -127,6 +127,24 @@
         </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-163" value="nova versão log4j" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
           <mxGeometry x="1300" y="450" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-129" value="" style="fillColor=#AE4132;strokeColor=none;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="780" y="760" width="610" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-130" value="fora do horário comercial - confilto commits" style="rounded=1;fillColor=#e3c800;strokeColor=#B09500;fontStyle=1;fontFamily=Tahoma;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="793.5" y="780" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-131" value="direto na &#39;dev&#39;.&#xa;desenvolvedores  fazer rebase" style="rounded=1;fillColor=#e3c800;strokeColor=#B09500;fontStyle=1;fontFamily=Tahoma;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="793.5" y="870" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-133" value="validação volta dia 01/02" style="rounded=1;fillColor=#e3c800;strokeColor=#B09500;fontStyle=1;fontFamily=Tahoma;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="793.5" y="960" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-137" value="50 projetos" style="rounded=1;fillColor=#e3c800;strokeColor=#B09500;fontStyle=1;fontFamily=Tahoma;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="780" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-138" value="projetos com builds/release recentes" style="rounded=1;fillColor=#e3c800;strokeColor=#B09500;fontStyle=1;fontFamily=Tahoma;fontSize=14;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="875" width="270" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
