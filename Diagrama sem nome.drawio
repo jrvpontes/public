@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-01-19T16:46:07.464Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 OPR/94.0.0.0" etag="BggGRLEfRm4lubfXVHBK" version="20.8.7" type="github">
+<mxfile host="app.diagrams.net" modified="2023-01-19T17:17:59.532Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 OPR/94.0.0.0" etag="8luLOTHCscq4bLQjbkUi" version="20.8.7" type="github">
   <diagram name="Page-1" id="2c0d36ab-eaac-3732-788b-9136903baeff">
     <mxGraphModel dx="2074" dy="806" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
       <root>
@@ -38,6 +38,9 @@
         <mxCell id="2" value="Vulnerabilidade LOG4J" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=24;" parent="1" vertex="1">
           <mxGeometry x="757" y="185.5" width="263" height="80" as="geometry" />
         </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-123" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4" target="0re8-O0s-dHvsTImXKTh-134">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="4" value="Feito" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
           <mxGeometry x="793.4999999999998" y="325.5" width="190" height="80" as="geometry" />
         </mxCell>
@@ -50,7 +53,7 @@
         <mxCell id="0re8-O0s-dHvsTImXKTh-130" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=24;" parent="1" source="0re8-O0s-dHvsTImXKTh-124" target="0re8-O0s-dHvsTImXKTh-125" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="0re8-O0s-dHvsTImXKTh-124" value="Jenkins" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
+        <mxCell id="0re8-O0s-dHvsTImXKTh-124" value="Jenkins/Build/Release" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
           <mxGeometry x="537" y="430" width="190" height="80" as="geometry" />
         </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-131" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=24;" parent="1" source="0re8-O0s-dHvsTImXKTh-125" target="0re8-O0s-dHvsTImXKTh-126" edge="1">
@@ -74,8 +77,14 @@
         <mxCell id="0re8-O0s-dHvsTImXKTh-128" value="Projetos-GESIN2" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
           <mxGeometry x="537" y="850" width="190" height="80" as="geometry" />
         </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-124" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="0re8-O0s-dHvsTImXKTh-134" target="0re8-O0s-dHvsTImXKTh-135">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-134" value="nova versão-sicoob-java" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
           <mxGeometry x="793.4999999999998" y="440" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-125" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="0re8-O0s-dHvsTImXKTh-135" target="0re8-O0s-dHvsTImXKTh-142">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-135" value="nova versão pdc-trfi" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
           <mxGeometry x="793.4999999999998" y="540" width="190" height="80" as="geometry" />
@@ -88,12 +97,6 @@
         </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-145" value="A fazer" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
           <mxGeometry x="1069.9999999999998" y="320" width="190" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="0re8-O0s-dHvsTImXKTh-160" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=24;" parent="1" source="0re8-O0s-dHvsTImXKTh-147" target="0re8-O0s-dHvsTImXKTh-159" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="0re8-O0s-dHvsTImXKTh-164" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=24;" parent="1" source="0re8-O0s-dHvsTImXKTh-147" target="0re8-O0s-dHvsTImXKTh-163" edge="1">
-          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-147" value="Projetos GESIN-2" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
           <mxGeometry x="1070" y="440" width="190" height="80" as="geometry" />
@@ -110,10 +113,16 @@
         <mxCell id="0re8-O0s-dHvsTImXKTh-162" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=24;" parent="1" source="0re8-O0s-dHvsTImXKTh-159" target="0re8-O0s-dHvsTImXKTh-149" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-127" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#e51400;strokeColor=#B20000;strokeWidth=3;" edge="1" parent="1" source="0re8-O0s-dHvsTImXKTh-159" target="0re8-O0s-dHvsTImXKTh-147">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-159" value="nova versão-trfi" style="whiteSpace=wrap;html=1;fontSize=14;fontFamily=Tahoma;fillColor=#23445D;strokeColor=none;fontColor=#FFFFFF;rounded=1;gradientColor=none;fontStyle=1;" parent="1" vertex="1">
           <mxGeometry x="1105" y="550" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-165" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=24;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="0re8-O0s-dHvsTImXKTh-163" target="0re8-O0s-dHvsTImXKTh-149" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7DtCGU1AQhI5Hgv5MoO2-126" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#e51400;strokeColor=#B20000;strokeWidth=3;" edge="1" parent="1" source="0re8-O0s-dHvsTImXKTh-163" target="0re8-O0s-dHvsTImXKTh-147">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="0re8-O0s-dHvsTImXKTh-163" value="nova versão log4j" style="rounded=1;fillColor=#23445D;gradientColor=none;strokeColor=none;fontColor=#FFFFFF;fontStyle=1;fontFamily=Tahoma;fontSize=14" parent="1" vertex="1">
