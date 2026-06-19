@@ -1,76 +1,187 @@
 #!/usr/bin/env python3
 
 import json
-import sys
+import os
+import subprocess
 import time
-import pywinctl as pwc
 
-WORKSPACE_FILE = sys.argv[1] if len(sys.argv) > 1 else "workspace.json"
+WORKSPACE_FILE = "/wks/paimon/wks-workspace.json"
 
 
-def find_windows(spec):
+def run(cmd):
+    try:
+        return subprocess.check_output(
+            cmd,
+            stderr=subprocess.DEVNULL,
+            text=True
+        ).strip()
+    except Exception:
+        return ""
 
-    matches = []
 
-    wm_class = spec.get("wm_class")
-    title = spec.get("title")
+def get_current_window_id():
 
-    for win in pwc.getAllWindows():
+    #
+    # py close.py
+    #  └─ bash
+    #      └─ terminal
+    #
+
+    current_pid = os.getpid()
+
+    pid = current_pid
+
+    for _ in range(10):
 
         try:
 
-            current_title = str(win.title).strip()
+            ppid = int(
+                run(
+                    [
+                        "ps",
+                        "-o",
+                        "ppid=",
+                        "-p",
+                        str(pid)
+                    ]
+                )
+            )
 
-            if not current_title:
-                continue
+            if ppid <= 1:
+                break
 
-            if title and current_title == title:
-                matches.append(win)
-                continue
-
-            if wm_class:
-                for clazz in wm_class:
-                    if clazz and clazz.lower() in current_title.lower():
-                        matches.append(win)
-                        break
+            pid = ppid
 
         except Exception:
-            pass
+            break
 
-    return matches
+    output = run(["wmctrl", "-lp"])
+
+    for line in output.splitlines():
+
+        parts = line.split(None, 4)
+
+        if len(parts) < 5:
+            continue
+
+        window_id = parts[0]
+        window_pid = parts[2]
+
+        if str(pid) == window_pid:
+            return window_id
+
+    return None
 
 
-with open(WORKSPACE_FILE, encoding="utf-8") as f:
-    workspace = json.load(f)
+def get_existing_windows():
 
-windows = workspace.get("windows", [])
+    result = set()
 
-print(f"windows in workspace: {len(windows)}")
+    output = run(["wmctrl", "-lp"])
 
-closed = set()
+    for line in output.splitlines():
 
-for spec in reversed(windows):
+        parts = line.split()
 
-    matches = find_windows(spec)
+        if not parts:
+            continue
 
-    for win in matches:
+        result.add(parts[0].lower())
 
-        try:
+    return result
 
-            wid = id(win)
 
-            if wid in closed:
-                continue
+def close_window(window_id):
 
-            print(f"closing: {win.title}")
+    try:
 
-            win.close()
+        subprocess.run(
+            ["wmctrl", "-ic", window_id],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
 
-            closed.add(wid)
+        return True
 
-            time.sleep(0.2)
+    except Exception:
 
-        except Exception as e:
-            print(f"error: {e}")
+        return False
 
-print(f"closed: {len(closed)}")
+
+def main():
+
+    with open(
+        WORKSPACE_FILE,
+        "r",
+        encoding="utf-8"
+    ) as f:
+
+        data = json.load(f)
+
+    windows = data.get("windows", [])
+
+    current_window = get_current_window_id()
+
+    existing_windows = get_existing_windows()
+
+    print()
+    print("workspace close")
+    print()
+
+    if current_window:
+        print(f"current window: {current_window}")
+        print()
+
+    closed = 0
+    skipped = 0
+
+    #
+    # fecha de trás para frente
+    #
+
+    for spec in reversed(windows):
+
+        window_id = spec.get("window_id")
+
+        if not window_id:
+            continue
+
+        window_id = window_id.lower()
+
+        if window_id not in existing_windows:
+            continue
+
+        if current_window and window_id == current_window.lower():
+
+            print(
+                f"skip current: "
+                f"{spec.get('title', window_id)}"
+            )
+
+            skipped += 1
+            continue
+
+        print(
+            f"closing: "
+            f"{spec.get('title', window_id)}"
+        )
+
+        close_window(window_id)
+
+        closed += 1
+
+        time.sleep(0.3)
+
+    print()
+    print(f"closed : {closed}")
+    print(f"skipped: {skipped}")
+
+    #
+    # tempo para aplicações encerrarem
+    #
+
+    time.sleep(3)
+
+
+if __name__ == "__main__":
+    main()

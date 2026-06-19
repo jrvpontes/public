@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 
 import json
+import os
 import subprocess
+
 import pywinctl as pwc
 
-OUTPUT_FILE = "/wks/paimon/workspace.json"
+OUTPUT_FILE = "/wks/paimon/wks-workspace.json"
 
-IGNORE_WM_CLASSES = {
+IGNORE_CLASSES = {
     "nemo-desktop",
     "desktop",
     "cinnamon",
     "cinnamon-settings-daemon",
     "xfce4-panel",
     "plasmashell",
-    "gnome-shell"
+    "gnome-shell",
 }
 
 
@@ -21,382 +23,235 @@ def run(cmd):
     try:
         return subprocess.check_output(
             cmd,
-            text=True,
-            stderr=subprocess.DEVNULL
-        )
+            stderr=subprocess.DEVNULL,
+            text=True
+        ).strip()
     except Exception:
         return ""
 
 
-def get_monitors():
-
-    monitors = []
-
-    output = run(["xrandr", "--query"])
-
-    for line in output.splitlines():
-
-        if " connected " not in line:
-            continue
-
-        parts = line.split()
-
-        name = parts[0]
-
-        geom = None
-
-        for token in parts:
-
-            if "+" in token and "x" in token:
-                geom = token
-                break
-
-        if not geom:
-            continue
-
-        size, pos = geom.split("+", 1)
-
-        width, height = map(int, size.split("x"))
-        x, y = map(int, pos.split("+"))
-
-        monitors.append({
-            "name": name,
-            "x": x,
-            "y": y,
-            "width": width,
-            "height": height
-        })
-
-    return monitors
+def is_internal_process(cmdline):
+    return False
 
 
-def find_monitor(monitors, left, top, width, height):
+def get_pid(window_id):
+    out = run(["xprop", "-id", window_id, "_NET_WM_PID"])
 
-    center_x = left + width // 2
-    center_y = top + height // 2
+    if "=" not in out:
+        return None
 
-    for m in monitors:
-
-        if (
-            center_x >= m["x"]
-            and center_x < (m["x"] + m["width"])
-            and center_y >= m["y"]
-            and center_y < (m["y"] + m["height"])
-        ):
-            return m["name"]
-
-    return None
-
-
-def get_wmctrl_data():
-
-    result = {}
-
-    output = run(["wmctrl", "-lp"])
-
-    for line in output.splitlines():
-
-        parts = line.split(None, 4)
-
-        if len(parts) < 5:
-            continue
-
-        wid = parts[0].lower()
-        pid = parts[2]
-
-        result[wid] = {
-            "window_id": wid,
-            "pid": int(pid)
-        }
-
-    return result
+    try:
+        return int(out.split("=")[1].strip())
+    except Exception:
+        return None
 
 
 def get_wm_class(window_id):
+    out = run(["xprop", "-id", window_id, "WM_CLASS"])
+
+    if "=" not in out:
+        return []
 
     try:
+        value = out.split("=", 1)[1].strip()
 
-        output = run([
-            "xprop",
-            "-id",
-            window_id,
-            "WM_CLASS"
-        ])
+        classes = []
 
-        if "=" not in output:
-            return None
-
-        value = output.split("=", 1)[1].strip()
-
-        classes = [
-            x.strip().strip('"')
-            for x in value.split(",")
-        ]
+        for item in value.split(","):
+            item = item.strip().strip('"')
+            if item:
+                classes.append(item)
 
         return classes
 
     except Exception:
-        return None
-
-
-def get_pid(win):
-
-    for attr in ("pid", "_pid"):
-
-        if hasattr(win, attr):
-            try:
-                return int(getattr(win, attr))
-            except Exception:
-                pass
-
-    for method in ("getPID",):
-
-        if hasattr(win, method):
-            try:
-                return int(getattr(win, method)())
-            except Exception:
-                pass
-
-    return None
-
-
-def get_window_id(win):
-
-    for attr in (
-        "_hWnd",
-        "_hwnd",
-        "hWnd",
-        "hwnd"
-    ):
-
-        if hasattr(win, attr):
-
-            try:
-
-                value = getattr(win, attr)
-
-                if isinstance(value, int):
-                    return hex(value).lower()
-
-                return str(value).lower()
-
-            except Exception:
-                pass
-
-    return None
+        return []
 
 
 def get_process_cmdline(pid):
+    try:
+        with open(f"/proc/{pid}/cmdline", "rb") as f:
+            data = f.read()
 
-    if not pid:
-        return None
+        return data.replace(b"\x00", b" ").decode().strip()
 
-    output = run([
-        "ps",
-        "-p",
-        str(pid),
-        "-o",
-        "args="
-    ])
-
-    output = output.strip()
-
-    return output if output else None
+    except Exception:
+        return ""
 
 
 def get_process_exe(pid):
-
-    if not pid:
-        return None
-
-    output = run([
-        "readlink",
-        "-f",
-        f"/proc/{pid}/exe"
-    ])
-
-    output = output.strip()
-
-    return output if output else None
+    try:
+        return os.readlink(f"/proc/{pid}/exe")
+    except Exception:
+        return ""
 
 
-def is_internal_process(cmdline):
-
-    if not cmdline:
-        return False
-
-    patterns = [
-        "--gapplication-service"
-    ]
-
-    return any(
-        pattern in cmdline
-        for pattern in patterns
-    )
-
-
-def get_launch_command(exe):
-
+def get_launch_command(exe, cmdline):
     if not exe:
-        return None
+        return cmdline
 
-    exe_name = exe.split("/")[-1]
+    if "--gapplication-service" in cmdline:
+        return exe
 
-    launchers = {
-
-        "tilix": "tilix",
-
-        "firefox": "firefox",
-
-        "google-chrome": "google-chrome",
-        "chrome": "google-chrome",
-        "chromium": "chromium",
-
-        "code": "code",
-        "code-insiders": "code-insiders",
-
-        "idea": "idea",
-        "idea.sh": "idea",
-
-        "pycharm": "pycharm",
-        "pycharm.sh": "pycharm",
-
-        "webstorm": "webstorm",
-        "clion": "clion",
-
-        "nemo": None,
-        "cinnamon": None
-    }
-
-    if exe_name in launchers:
-        return launchers[exe_name]
-
-    return exe
+    return cmdline if cmdline else exe
 
 
-def is_active(win):
+def get_active_window():
+    return run(["xdotool", "getactivewindow"])
 
+
+def get_monitor_name(x, y):
     try:
-        return bool(win.isActive)
-    except Exception:
-        return False
+        output = run(["xrandr", "--listmonitors"])
 
+        lines = output.splitlines()[1:]
 
-def is_maximized(win):
+        for line in lines:
 
-    try:
-        return bool(win.isMaximized)
-    except Exception:
-        return False
+            parts = line.split()
 
-
-def is_minimized(win):
-
-    try:
-        return bool(win.isMinimized)
-    except Exception:
-        return False
-
-
-monitors = get_monitors()
-wmctrl_data = get_wmctrl_data()
-
-windows = []
-
-for win in pwc.getAllWindows():
-
-    try:
-
-        title = str(win.title).strip()
-
-        if not title:
-            continue
-
-        left = int(win.left)
-        top = int(win.top)
-        width = int(win.width)
-        height = int(win.height)
-
-        pid = get_pid(win)
-        window_id = get_window_id(win)
-
-        if window_id and window_id in wmctrl_data:
-            pid = wmctrl_data[window_id]["pid"]
-
-        wm_class = get_wm_class(window_id) if window_id else None
-
-        if wm_class:
-
-            normalized = {
-                x.lower()
-                for x in wm_class
-                if x
-            }
-
-            if normalized & IGNORE_WM_CLASSES:
+            if len(parts) < 3:
                 continue
 
-        process_cmdline = get_process_cmdline(pid)
+            geometry = parts[2]
 
-        if is_internal_process(process_cmdline):
-            process_cmdline = None
+            if "+" not in geometry:
+                continue
 
-        process_exe = get_process_exe(pid)
+            size_part, pos_part = geometry.split("+", 1)
 
-        windows.append({
+            width = int(size_part.split("/")[0].split("x")[0])
+            height = int(size_part.split("/")[1].split("+")[0])
 
-            "window_id": window_id,
+            pos = geometry.split("+")
+            mon_x = int(pos[1])
+            mon_y = int(pos[2])
 
-            "pid": pid,
+            if (
+                x >= mon_x
+                and x < mon_x + width
+                and y >= mon_y
+                and y < mon_y + height
+            ):
+                return parts[-1]
 
-            "wm_class": wm_class,
+    except Exception:
+        pass
 
-            "process_cmdline": process_cmdline,
+    return ""
 
-            "process_exe": process_exe,
 
-            "launch_command": get_launch_command(
-                process_exe
-            ),
+def is_maximized(window):
+    try:
+        return window.isMaximized
+    except Exception:
+        return False
 
-            "title": title,
 
-            "monitor": find_monitor(
-                monitors,
-                left,
-                top,
-                width,
-                height
-            ),
+def is_minimized(window):
+    try:
+        return window.isMinimized
+    except Exception:
+        return False
 
-            "left": left,
-            "top": top,
-            "width": width,
-            "height": height,
 
-            "active": is_active(win),
-            "maximized": is_maximized(win),
-            "minimized": is_minimized(win)
+def should_ignore_window(title, wm_class):
+    if not wm_class:
+        return False
 
-        })
+    for item in wm_class:
 
-    except Exception as e:
-        print(f"ignored: {e}")
+        value = item.lower()
 
-workspace = {
-    "monitors": monitors,
-    "windows": windows
-}
+        if value in IGNORE_CLASSES:
+            return True
 
-with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    return False
 
-    json.dump(
-        workspace,
-        f,
-        indent=2,
-        ensure_ascii=False
-    )
 
-print(f"workspace saved: {OUTPUT_FILE}")
-print(f"monitors: {len(monitors)}")
-print(f"windows: {len(windows)}")
+def save_workspace():
+
+    active_window = get_active_window()
+
+    windows = []
+
+    for window in pwc.getAllWindows():
+
+        try:
+
+            title = window.title
+
+            if not title:
+                continue
+
+            window_id = hex(window.getHandle())
+
+            pid = get_pid(window_id)
+
+            if not pid:
+                continue
+
+            wm_class = get_wm_class(window_id)
+
+            if should_ignore_window(title, wm_class):
+                continue
+
+            process_cmdline = get_process_cmdline(pid)
+
+            if is_internal_process(process_cmdline):
+                continue
+
+            process_exe = get_process_exe(pid)
+
+            launch_command = get_launch_command(
+                process_exe,
+                process_cmdline
+            )
+
+            left = window.left
+            top = window.top
+            width = window.width
+            height = window.height
+
+            monitor = get_monitor_name(left, top)
+
+            windows.append(
+                {
+                    "window_id": window_id,
+                    "pid": pid,
+                    "wm_class": wm_class,
+                    "process_cmdline": process_cmdline,
+                    "process_exe": process_exe,
+                    "launch_command": launch_command,
+                    "title": title,
+                    "monitor": monitor,
+                    "left": left,
+                    "top": top,
+                    "width": width,
+                    "height": height,
+                    "active": window_id == active_window,
+                    "maximized": is_maximized(window),
+                    "minimized": is_minimized(window),
+                }
+            )
+
+        except Exception as e:
+
+            print(f"skip window -> {e}")
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "windows": windows
+            },
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
+
+    print(f"saved: {OUTPUT_FILE}")
+    print(f"windows: {len(windows)}")
+
+
+if __name__ == "__main__":
+    save_workspace()
