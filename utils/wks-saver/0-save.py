@@ -6,15 +6,30 @@ import pywinctl as pwc
 
 OUTPUT_FILE = "/wks/paimon/workspace.json"
 
+IGNORE_WM_CLASSES = {
+    "nemo-desktop",
+    "desktop",
+    "cinnamon",
+    "cinnamon-settings-daemon",
+    "xfce4-panel",
+    "plasmashell",
+    "gnome-shell"
+}
+
 
 def run(cmd):
     try:
-        return subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)
+        return subprocess.check_output(
+            cmd,
+            text=True,
+            stderr=subprocess.DEVNULL
+        )
     except Exception:
         return ""
 
 
 def get_monitors():
+
     monitors = []
 
     output = run(["xrandr", "--query"])
@@ -29,7 +44,9 @@ def get_monitors():
         name = parts[0]
 
         geom = None
+
         for token in parts:
+
             if "+" in token and "x" in token:
                 geom = token
                 break
@@ -153,7 +170,9 @@ def get_window_id(win):
     ):
 
         if hasattr(win, attr):
+
             try:
+
                 value = getattr(win, attr)
 
                 if isinstance(value, int):
@@ -199,6 +218,60 @@ def get_process_exe(pid):
     output = output.strip()
 
     return output if output else None
+
+
+def is_internal_process(cmdline):
+
+    if not cmdline:
+        return False
+
+    patterns = [
+        "--gapplication-service"
+    ]
+
+    return any(
+        pattern in cmdline
+        for pattern in patterns
+    )
+
+
+def get_launch_command(exe):
+
+    if not exe:
+        return None
+
+    exe_name = exe.split("/")[-1]
+
+    launchers = {
+
+        "tilix": "tilix",
+
+        "firefox": "firefox",
+
+        "google-chrome": "google-chrome",
+        "chrome": "google-chrome",
+        "chromium": "chromium",
+
+        "code": "code",
+        "code-insiders": "code-insiders",
+
+        "idea": "idea",
+        "idea.sh": "idea",
+
+        "pycharm": "pycharm",
+        "pycharm.sh": "pycharm",
+
+        "webstorm": "webstorm",
+        "clion": "clion",
+
+        "nemo": None,
+        "cinnamon": None
+    }
+
+    if exe_name in launchers:
+        return launchers[exe_name]
+
+    return exe
 
 
 def is_active(win):
@@ -250,18 +323,41 @@ for win in pwc.getAllWindows():
         if window_id and window_id in wmctrl_data:
             pid = wmctrl_data[window_id]["pid"]
 
+        wm_class = get_wm_class(window_id) if window_id else None
+
+        if wm_class:
+
+            normalized = {
+                x.lower()
+                for x in wm_class
+                if x
+            }
+
+            if normalized & IGNORE_WM_CLASSES:
+                continue
+
+        process_cmdline = get_process_cmdline(pid)
+
+        if is_internal_process(process_cmdline):
+            process_cmdline = None
+
+        process_exe = get_process_exe(pid)
+
         windows.append({
 
             "window_id": window_id,
 
             "pid": pid,
 
-            "wm_class": get_wm_class(window_id)
-            if window_id else None,
+            "wm_class": wm_class,
 
-            "process_cmdline": get_process_cmdline(pid),
+            "process_cmdline": process_cmdline,
 
-            "process_exe": get_process_exe(pid),
+            "process_exe": process_exe,
+
+            "launch_command": get_launch_command(
+                process_exe
+            ),
 
             "title": title,
 
@@ -293,6 +389,7 @@ workspace = {
 }
 
 with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+
     json.dump(
         workspace,
         f,

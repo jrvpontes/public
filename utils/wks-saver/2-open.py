@@ -4,59 +4,116 @@ import json
 import subprocess
 import sys
 import time
+import pywinctl as pwc
 
-WORKSPACE_FILE = sys.argv[1] if len(sys.argv) > 1 else "workspace.json"
+WORKSPACE_FILE = sys.argv[1] if len(sys.argv) > 1 else "/wks/paimon/workspace.json"
 
 
-def launch(spec):
+def start_window(spec):
 
-    cmd = spec.get("process_cmdline")
+    cmd = spec.get("launch_command")
 
     if not cmd:
-        return None
+        return False
 
     try:
+
         print(f"starting: {cmd}")
 
-        return subprocess.Popen(
+        subprocess.Popen(
             cmd,
             shell=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
 
+        return True
+
     except Exception as e:
-        print(f"error starting [{cmd}] => {e}")
+
+        print(f"start failed [{cmd}] -> {e}")
+        return False
+
+
+def find_window_by_wm_class(wm_class, timeout=60):
+
+    if not wm_class:
         return None
 
-
-def find_window(title, timeout=60):
+    expected = {
+        x.lower()
+        for x in wm_class
+        if x
+    }
 
     end = time.time() + timeout
 
     while time.time() < end:
 
-        try:
+        for win in pwc.getAllWindows():
 
-            import pywinctl as pwc
+            try:
 
-            for win in pwc.getAllWindows():
+                title = str(win.title).strip()
 
-                try:
-                    if win.title.strip() == title:
-                        return win
-                except Exception:
-                    pass
+                if not title:
+                    continue
 
-        except Exception:
-            pass
+                for attr in (
+                    "_hWnd",
+                    "_hwnd",
+                    "hWnd",
+                    "hwnd"
+                ):
+
+                    if not hasattr(win, attr):
+                        continue
+
+                    try:
+
+                        value = getattr(win, attr)
+
+                        if isinstance(value, int):
+                            window_id = hex(value).lower()
+                        else:
+                            window_id = str(value).lower()
+
+                        output = subprocess.check_output(
+                            [
+                                "xprop",
+                                "-id",
+                                window_id,
+                                "WM_CLASS"
+                            ],
+                            text=True,
+                            stderr=subprocess.DEVNULL
+                        )
+
+                        if "=" not in output:
+                            continue
+
+                        current = output.split("=", 1)[1]
+
+                        current = {
+                            x.strip().strip('"').lower()
+                            for x in current.split(",")
+                        }
+
+                        if current & expected:
+                            return win
+
+                    except Exception:
+                        pass
+
+            except Exception:
+                pass
 
         time.sleep(1)
 
     return None
 
 
-def restore_geometry(win, spec):
+def restore_window(win, spec):
 
     try:
 
@@ -64,30 +121,27 @@ def restore_geometry(win, spec):
             win.minimize()
             return
 
-        if spec.get("maximized"):
-            win.maximize()
-            return
+        try:
+            win.restore()
+        except Exception:
+            pass
 
-        win.restore()
-
-    except Exception:
-        pass
-
-    try:
         win.moveTo(
             spec["left"],
             spec["top"]
         )
-    except Exception:
-        pass
 
-    try:
         win.resizeTo(
             spec["width"],
             spec["height"]
         )
-    except Exception:
-        pass
+
+        if spec.get("maximized"):
+            win.maximize()
+
+    except Exception as e:
+
+        print(f"restore failed [{spec['title']}] -> {e}")
 
 
 with open(WORKSPACE_FILE, encoding="utf-8") as f:
@@ -97,43 +151,59 @@ windows = workspace["windows"]
 
 started = []
 
-print(f"windows in workspace: {len(windows)}")
-
 #
-# fase 1 - iniciar processos
+# fase 1
+# iniciar aplicações
 #
 
 for spec in windows:
 
-    proc = launch(spec)
-
-    if proc:
+    if start_window(spec):
         started.append(spec)
 
-    time.sleep(1)
+    time.sleep(0.5)
 
 #
-# fase 2 - aguardar janelas e restaurar layout
+# fase 2
+# localizar por WM_CLASS
 #
 
 for spec in started:
 
-    title = spec["title"]
+    wm_class = spec.get("wm_class")
 
-    print(f"waiting window: {title}")
+    print(
+        f"waiting window: "
+        f"{wm_class}"
+    )
 
-    win = find_window(title)
+    win = find_window_by_wm_class(
+        wm_class,
+        timeout=30
+    )
 
     if not win:
-        print(f"not found: {title}")
+
+        print(
+            f"window not found: "
+            f"{wm_class}"
+        )
+
         continue
 
-    print(f"restoring: {title}")
+    print(
+        f"restoring: "
+        f"{spec['title']}"
+    )
 
-    restore_geometry(win, spec)
+    restore_window(
+        win,
+        spec
+    )
 
 #
-# fase 3 - ativar janela originalmente ativa
+# fase 3
+# restaurar foco
 #
 
 for spec in windows:
@@ -141,7 +211,10 @@ for spec in windows:
     if not spec.get("active"):
         continue
 
-    win = find_window(spec["title"], timeout=5)
+    win = find_window_by_wm_class(
+        spec.get("wm_class"),
+        timeout=5
+    )
 
     if not win:
         continue
