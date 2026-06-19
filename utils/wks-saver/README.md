@@ -68,9 +68,4 @@ Problemas identificados:
 ## Regra Principal
 
 Não alterar a arquitetura atual do `save` e do `open`.
-
-Prioridade máxima:
-
-> Não quebrar o Eclipse.
-
 O foco desta conversa é exclusivamente evoluir o script `close`.
